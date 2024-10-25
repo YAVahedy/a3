@@ -15,7 +15,9 @@ body {
   max-width: 100vw;
   overflow-x: hidden;
 }
-
+.no-header header {
+  display: none;
+}
 body {
   color: var(--foreground);
   background: var(--background);
