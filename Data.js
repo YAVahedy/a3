@@ -5,6 +5,7 @@ let genresFetched = false;
 let authorsFetched = false;
 let booksFetched = false;
 
+
 const fetchBooks = async () => {
   if (booksFetched) return;
   try {

@@ -1,26 +1,37 @@
-import React, { useRef } from 'react';
-import { useRouter } from 'next/router';
+import React, { useRef, useState } from 'react';
 import styles from './BookSearch.module.css';
 import Button from "@/components/ui/button";
-import { getAllGenres } from '@/Data';
 
 const BookSearch = (props) => {
-  const g = useRef();
-  const r = useRouter();
+  const genreRef = useRef();
+  const [searchQuery, setSearchQuery] = useState('');
 
-  const submit = (event) => {
+  const handleSearchChange = (event) => {
+    setSearchQuery(event.target.value);
+  };
+
+  const handleSearchSubmit = (event) => {
     event.preventDefault();
-    const selectedGenre = g.current.value;
-    if (selectedGenre<1) return;
-    r.push(`/genres/${selectedGenre}`);
+    const selectedGenre = genreRef.current.value;
+    props.onSearch(searchQuery, selectedGenre);
   };
 
   return (
-    <form className={styles.form} onSubmit={submit}>
+    <form className={styles.form} onSubmit={handleSearchSubmit}>
       <div className={styles.controls}>
         <div className={styles.control}>
-          <label>Genre</label>
-          <select id='genre' ref={g}>
+          <label htmlFor="search">Search by Book Name</label>
+          <input
+            type="text"
+            id="search"
+            value={searchQuery}
+            onChange={handleSearchChange}
+          />
+        </div>
+        <div className={styles.control}>
+          <label htmlFor="genre">Genre</label>
+          <select id="genre" ref={genreRef}>
+            <option value="">All Genres</option>
             {props.genres && props.genres.map((genre) => (
               <option key={genre.id} value={genre.id}>
                 {genre.name}
@@ -29,7 +40,7 @@ const BookSearch = (props) => {
           </select>
         </div>
       </div>
-      <Button type="submit">Filter Books</Button>
+      <Button type="submit">Search</Button>
     </form>
   );
 };

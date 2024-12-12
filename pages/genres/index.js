@@ -1,5 +1,4 @@
 import GenreList from "@/components/genres/GenreList";
-import { getAllGenres } from "@/Data";
 
 export default function AllGenresPage(props) {
   const { genres } = props;
@@ -12,11 +11,24 @@ export default function AllGenresPage(props) {
 }
 
 export async function getServerSideProps() {
-  const genres = await getAllGenres();
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/genres`);
+    if (!res.ok) {
+      throw new Error('Failed to fetch genres');
+    }
+    const genres = await res.json();
 
-  return {
-    props: {
-      genres,
-    },
-  };
+    return {
+      props: {
+        genres,
+      },
+    };
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    return {
+      props: {
+        genres: [],
+      },
+    };
+  }
 }
